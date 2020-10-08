@@ -188,7 +188,7 @@ void SAL_CALL Addon::dispatch( const URL& aURL, const Sequence < PropertyValue >
 
             //create tables
             for(int nTable = 0; nTable < 2 + std::rand()/((RAND_MAX + 1u)/6); nTable++){
-
+                xTextRange->setString(OUString::createFromAscii(("Table "+ std::to_string(nTable)).c_str()));
                 Reference <XTextTable> xTable (oDocMSF->createInstance(
                             OUString::createFromAscii("com.sun.star.text.TextTable")),UNO_QUERY);
                 if (!xTable.is()) {
@@ -196,7 +196,7 @@ void SAL_CALL Addon::dispatch( const URL& aURL, const Sequence < PropertyValue >
                     return;
                 }
             
-                // Specify that the table
+                // Specify the table
                 int cols =  3 + std::rand()/((RAND_MAX + 1u)/3), rows = 3 + std::rand()/((RAND_MAX + 1u)/7);
                 xTable->initialize(cols, rows);
                 xTextRange = xText->getEnd();
