@@ -162,15 +162,16 @@ void SAL_CALL Addon::dispatch( const URL& aURL, const Sequence < PropertyValue >
     {
         if ( aURL.Path.equalsAscii( "Function2" ) )
         {
-            std::srand(std::time(nullptr)); // use current time as seed for random generator 
-            
+            std::srand(std::time(nullptr)); 
+
+            //get document
             Reference<XMultiComponentFactory> xServiceManager = mxContext->getServiceManager();
             Reference<XInterface> xDesktop = xServiceManager->createInstanceWithContext(OUString("com.sun.star.frame.Desktop"), mxContext);
             if ( !xServiceManager.is() )
-        {
-            fprintf(stderr, "no service manager!\n");
-            return;
-        }
+            {
+                fprintf(stderr, "no service manager!\n");
+                return;
+            }
 
             Reference<XDesktop2> xDesktop2(xDesktop, UNO_QUERY);
 
@@ -182,19 +183,20 @@ void SAL_CALL Addon::dispatch( const URL& aURL, const Sequence < PropertyValue >
 
             Reference < XTextDocument > xTextDocument (xComponent,UNO_QUERY);
             Reference< XText > xText = xTextDocument->getText();
-            Reference<XTextRange> xTextRange = xText->getStart();
-            // xTextRange->setString(OUString::createFromAscii("Hello"));           
+            Reference<XTextRange> xTextRange = xText->getStart();        
             Reference<XMultiServiceFactory> oDocMSF (xTextDocument,UNO_QUERY);
+
+            //create tables
             for(int nTable = 0; nTable < 2 + std::rand()/((RAND_MAX + 1u)/6); nTable++){
 
-            Reference <XTextTable> xTable (oDocMSF->createInstance(
-                        OUString::createFromAscii("com.sun.star.text.TextTable")),UNO_QUERY);
-            if (!xTable.is()) {
-                printf("Erreur creation XTextTable interface !\n");
-                return;
-            }
+                Reference <XTextTable> xTable (oDocMSF->createInstance(
+                            OUString::createFromAscii("com.sun.star.text.TextTable")),UNO_QUERY);
+                if (!xTable.is()) {
+                    printf("Erreur creation XTextTable interface !\n");
+                    return;
+                }
             
-                // Specify that we want the table
+                // Specify that the table
                 int cols =  3 + std::rand()/((RAND_MAX + 1u)/3), rows = 3 + std::rand()/((RAND_MAX + 1u)/7);
                 xTable->initialize(cols, rows);
                 xTextRange = xText->getEnd();
@@ -205,7 +207,7 @@ void SAL_CALL Addon::dispatch( const URL& aURL, const Sequence < PropertyValue >
                 xText->insertTextContent(xTextRange, xTextContent,(unsigned char) 0);
 
                 Reference<XCellRange> xRange(xTable, UNO_QUERY); 
-
+                //fill table
                 for (int nRow = 0; nRow < cols; ++nRow)
                     for (int nCol = 0; nCol < rows; ++nCol){
                         Reference<XCell> cell = xRange->getCellByPosition( nCol, nRow );
@@ -225,14 +227,18 @@ void SAL_CALL Addon::dispatch( const URL& aURL, const Sequence < PropertyValue >
             auto all_tables = table_supplier->getTextTables(); 
             auto elements = all_tables->getElementNames();
             for (auto el: elements){
+
                 Reference <XTextTable> xTable(all_tables->getByName(el),UNO_QUERY);
+                //calsulate min square matrix
                 Reference<XTextTableCursor> pos = xTable->createCursorByCellName("A1");
                 int max_col = 0, max_row = 0, squared = 0;
                 while(pos->goDown(1, false)) max_row ++;
                 while(pos->goRight(1, false)) max_col ++;
                 squared = std::min(max_col, max_row);
 
-                Reference<XCellRange> xRange(xTable, UNO_QUERY); 
+                Reference<XCellRange> xRange(xTable, UNO_QUERY);
+
+                //transpose 
 
                 for (int nRow = 0; nRow <= squared; ++nRow)
                     for (int nCol = nRow; nCol <= squared; ++nCol){
