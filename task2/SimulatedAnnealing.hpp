@@ -25,7 +25,8 @@ class SimulatedAnnealing{
 public:
     void generate_jobs(int N);
     void read_jobs();
-    SimulatedAnnealing(int M, double T0):proc_n(M), T(T0){ srand(std::time(nullptr)); };
+    // SimulatedAnnealing(int M, double T0):proc_n(M), T(T0){ srand(std::time(nullptr)); };
+    SimulatedAnnealing(int M, double T0):proc_n(M), T(T0){};
     void start_main_cycle(double T0, int max_mute);
 
 

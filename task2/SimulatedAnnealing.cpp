@@ -52,13 +52,13 @@ void SimulatedAnnealing<TempLaw>::start_main_cycle(double T0, int max_mute){
     int no_change = 0;
     int iter = 0;
     while (no_change < 100){
-        cout << "TEMP: " << temp_law->get_temp() << endl; 
+        // cout << "TEMP: " << temp_law->get_temp() << endl; 
         
         if (mutation->mutate(temp_law->get_temp())){
             no_change = 0;
         } else {
             no_change++;
-            cout << "Iter: " << no_change << endl;
+            // cout << "Iter: " << no_change << endl;
             // solution->print_solution();
 
         }

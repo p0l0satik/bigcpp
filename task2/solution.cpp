@@ -1,19 +1,16 @@
 #include "solution.hpp"
 
 int gen_int(int to, int from = 0){
-    return from + std::rand() / ((RAND_MAX + 1u) / to);
+    if (to == from) return to;
+    return from + rand() / ((RAND_MAX + 1u) / to);
 }
 
 Solution::Solution(vector<double>& jobs, int M){
     best_sol_assesm = -1.0;
-    int curr_proc = 0;
-    for (auto job : jobs){
-        if (timetable.count(curr_proc) == 0){
-            timetable[curr_proc] = std::vector<double>();
-        }
-        timetable[curr_proc].push_back(job);
-        curr_proc = (curr_proc + 1) % M;
-    }
+    for (int t = 0; t < M; t ++)
+            timetable[t] = std::vector<double>();
+    for (auto job : jobs)
+        timetable[0].push_back(job);
 
 }
 
@@ -38,7 +35,7 @@ void Solution::print_best_solution(){
 Mutation::Mutation(shared_ptr<Solution> &sol, int max_mute):solution(sol), mute(max_mute){
     gen = mt19937(rd());
     uni_dis = uniform_real_distribution<>(0, 1.0);
-    srand(std::time(nullptr));
+    // srand(time(nullptr));
 };
 
 double Mutation::assess_solution(Timetable& timetable){
@@ -63,35 +60,31 @@ bool Mutation::mutate(double T){
             proc1 = gen_int(proc_n);
         }
         int proc2 = gen_int(proc_n);
-        int task2 = gen_int(solution->timetable[proc2].size() + 1), task1 = gen_int(solution->timetable[proc1].size());
-        solution->print_solution();
-        if (solution->timetable[proc2].size() == task2){
-            solution->timetable[proc2].push_back(solution->timetable[proc1][task1]);
+        int task2 = gen_int(solution->timetable[proc2].size()), task1 = gen_int(solution->timetable[proc1].size());
+        if (proc1 != proc2) {
+            solution->timetable[proc2].insert(solution->timetable[proc2].begin() + task2, solution->timetable[proc1][task1]);
             solution->timetable[proc1].erase(solution->timetable[proc1].begin() + task1);
-        } else 
+        } else {
             swap(solution->timetable[proc1][task1], solution->timetable[proc2][task2]);
-        cout << "after" << endl;
-        solution->print_solution();
+        }
+        
         double delta = assess_solution(solution->timetable) - curr_assesm;
         
-        cout << delta << " " << curr_assesm <<  " " << exp((1) * delta / T)<< endl ;
-        if (delta > 0){
-            cout << endl;
+        if (delta < 0){
             curr_assesm = assess_solution(solution->timetable);
-            if (solution->best_sol_assesm < 0 || curr_assesm - solution->best_sol_assesm > 0){
+            if (solution->best_sol_assesm < 0 || curr_assesm - solution->best_sol_assesm < 0){
                 solution->best_sol_assesm = curr_assesm;
                 solution->best_solution = solution->timetable;
                 improved = true;
             }
-        } else if (delta < 0 && uni_dis(gen) > exp((1) * delta / T)){
-            std::cout << "SWAPPED BACK " << delta <<  " " << exp((1) * delta / T)<< endl;
-            if (solution->timetable[proc2].size() == task2){
-                solution->timetable[proc1].insert(solution->timetable[proc1].begin() + task1, solution->timetable[proc2].back());
-                solution->timetable[proc2].pop_back();
-            } else 
+        } else if (delta > 0 && uni_dis(gen) > exp((-1) * delta / T)){
+            
+            if (proc1 != proc2) {
+                solution->timetable[proc1].insert(solution->timetable[proc1].begin() + task1, solution->timetable[proc2][task2]);
+                solution->timetable[proc2].erase(solution->timetable[proc2].begin() + task2);
+            } else {
                 swap(solution->timetable[proc1][task1], solution->timetable[proc2][task2]);
-            cout << "after reverse" << endl;
-            solution->print_solution();
+            }
         }
     }
     return improved;

@@ -5,9 +5,9 @@ using namespace std;
 class TemperatureLaw{
 protected:
     int iter;
-    double T;
+    double T, T0;
 public:
-    TemperatureLaw(double T0):T(T0), iter(1){};
+    TemperatureLaw(double T0):T(T0), T0(T0), iter(1){};
 
     virtual void cool_down() = 0;
     virtual double get_temp() = 0;

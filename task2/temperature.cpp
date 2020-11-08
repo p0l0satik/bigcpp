@@ -1,15 +1,14 @@
 #include "temperature.hpp"
 void BoltzmannLaw::cool_down(){
-    T = T / log(1 + iter++);
+    T = T0 / log(++iter);
 }
 
 void CauchyLaw::cool_down(){
-    T = T / (1 + iter++);
+    T = T0 / (++iter);
 }
 
 void MixedLaw::cool_down(){
-    T = T * (log(1 + iter) / (iter + 1));
-    iter++;
+    T = T0 * (log(++iter) / (iter));
 }
 
 double BoltzmannLaw::get_temp(){
