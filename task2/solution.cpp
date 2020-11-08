@@ -40,11 +40,11 @@ Mutation::Mutation(shared_ptr<Solution> &sol, int max_mute):solution(sol), mute(
 
 double Mutation::assess_solution(Timetable& timetable){
     double working_time = 0.0;
-    for (auto proc : timetable){
+    for (auto& proc : timetable){
         double proc_w_time = 0.0;
-        for (auto job : proc.second){
-            working_time += proc_w_time + job;
+        for (auto& job : proc.second){
             proc_w_time += job;
+            working_time += proc_w_time;
         }
     }
     return working_time;
@@ -52,7 +52,7 @@ double Mutation::assess_solution(Timetable& timetable){
 
 bool Mutation::mutate(double T){
     bool improved = false;
-    for (int i = 0; i < gen_int(mute, 1); ++i){
+    for (int i = 0; i < 1; ++i){
         int proc_n = solution->timetable.size();
         double curr_assesm = assess_solution(solution->timetable);
         int proc1 = gen_int(proc_n);
@@ -60,14 +60,23 @@ bool Mutation::mutate(double T){
             proc1 = gen_int(proc_n);
         }
         int proc2 = gen_int(proc_n);
-        int task2 = gen_int(solution->timetable[proc2].size()), task1 = gen_int(solution->timetable[proc1].size());
+        int task1 = gen_int(solution->timetable[proc1].size());
+        int task2 = 0;
+        for(int t = 0; t < solution->timetable[proc2].size(); ++t){
+            if (solution->timetable[proc2][t] > solution->timetable[proc1][task1]){
+                task2 = t;
+                break;
+            }
+        }
+        // cout << task2 << " " << solution->timetable[proc2].size() << endl;
+        // cout << "test1" << endl;
         if (proc1 != proc2) {
             solution->timetable[proc2].insert(solution->timetable[proc2].begin() + task2, solution->timetable[proc1][task1]);
             solution->timetable[proc1].erase(solution->timetable[proc1].begin() + task1);
         } else {
             swap(solution->timetable[proc1][task1], solution->timetable[proc2][task2]);
         }
-        
+        // cout << "test2" << endl;
         double delta = assess_solution(solution->timetable) - curr_assesm;
         
         if (delta < 0){
@@ -78,7 +87,7 @@ bool Mutation::mutate(double T){
                 improved = true;
             }
         } else if (delta > 0 && uni_dis(gen) > exp((-1) * delta / T)){
-            
+            // cout << "revert" << endl;
             if (proc1 != proc2) {
                 solution->timetable[proc1].insert(solution->timetable[proc1].begin() + task1, solution->timetable[proc2][task2]);
                 solution->timetable[proc2].erase(solution->timetable[proc2].begin() + task2);

@@ -58,12 +58,13 @@ void SimulatedAnnealing<TempLaw>::start_main_cycle(double T0, int max_mute){
             no_change = 0;
         } else {
             no_change++;
-            // cout << "Iter: " << no_change << endl;
             // solution->print_solution();
 
         }
         temp_law->cool_down();
+        iter++;
     }
+        cout << "Iter: " << iter++ << endl;
     cout << "Result " << endl << endl;
     solution->print_solution();
     cout << "Best " <<solution->best_sol_assesm << endl << endl;
