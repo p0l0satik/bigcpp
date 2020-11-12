@@ -1,15 +1,6 @@
 #include "SimulatedAnnealing.hpp"
 
 int main(int argc, char *argv[]){
-    // vector<int> vec = {0, 1, 2};
-    // vec.erase(vec.begin() + 2);
-    // vec.insert(vec.begin() + 2, 1);
-    // for (int t = 0; t < 100000; ++ t){
-    //     if (rand() / ((RAND_MAX + 1u) / 10) == 10) {
-    //         cout << "shit";
-    //     }
-    // }
-    // cout <<*vec.begin() << endl;
     int shed_proc_n = atoi(argv[2]); //usually 100
     int parallel = atoi(argv[3]);
     double T0 = 10;

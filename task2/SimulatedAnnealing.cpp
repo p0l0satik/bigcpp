@@ -153,7 +153,7 @@ void SimulatedAnnealing<TempLaw>::simulated_annealing(){
         pids.clear();
         k = 0;
     }
-    cout << "MIN " <<min_time <<  endl;
+    cout << setw(10) << fixed <<min_time <<  endl;
     fs::remove("res.txt");
 }
 

@@ -8,8 +8,10 @@ int gen_int(int to, int from = 0){
 Solution::Solution(vector<double>& jobs, int M, double best, string best_f){
     if (best == -1.0) {
         best_sol_assesm = -1.0;
-        for (int t = 0; t < M; t ++)
-                timetable[t] = vector<double>();
+        for (int t = 0; t < M; t ++){
+            timetable[t] = vector<double>();
+            timetable[t].reserve(jobs.size());
+        }
         for (auto job : jobs)
             timetable[0].push_back(job);
     } else {
@@ -19,6 +21,7 @@ Solution::Solution(vector<double>& jobs, int M, double best, string best_f){
                 double job;
                 in >> job;
                 timetable[t] = std::vector<double>();
+                timetable[t].reserve(jobs.size());
                 while(job >= 0){
                     timetable[t].push_back(job);
                     in >> job;
