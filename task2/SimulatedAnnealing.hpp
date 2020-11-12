@@ -36,9 +36,12 @@ class SimulatedAnnealing{
     };
     struct sembuf p0 = {0, -1, SEM_UNDO};
     struct sembuf v0 = {0, +1, SEM_UNDO};
-    int proc_n, temp_law, parallel_n, inner_mute, out_cycle, in_cycle;
+    int proc_n, parallel_n, inner_mute, out_cycle, in_cycle;
     double start_T;
     vector<double> jobs;
+    shared_ptr<SolutionAbstr> solution;
+    unique_ptr<TemperatureLaw> temp_law;
+    unique_ptr<MutationAbstr> mutation;
 public:
     void generate_jobs(int N, string name);
     void read_jobs(string name);

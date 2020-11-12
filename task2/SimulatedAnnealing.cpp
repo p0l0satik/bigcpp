@@ -42,9 +42,9 @@ void SimulatedAnnealing<TempLaw>::read_jobs(string name){
 
 template<class TempLaw>
 double SimulatedAnnealing<TempLaw>::start_main_cycle(string file, double best, string best_f){
-    auto solution = make_shared<Solution>(jobs, proc_n, best, best_f);
-    auto temp_law = make_unique<TempLaw>(start_T);
-    auto mutation = make_unique<Mutation>(solution, inner_mute);
+    solution = make_shared<Solution>(jobs, proc_n, best, best_f);
+    temp_law = make_unique<TempLaw>(start_T);
+    mutation = make_unique<Mutation>(solution, inner_mute);
     int no_change = 0;
     int iter = 0;
     while (no_change < in_cycle){
@@ -86,7 +86,7 @@ void SimulatedAnnealing<TempLaw>::simulated_annealing(){
     vector<int> pids;
     int k = 0;
     ofstream res ("res.txt");
-        cl << "-1";
+    cl << "-1";
     res.close();
     while (no_change < out_cycle) {
         for (int i = 0; i < parallel_n - 1; ++i){

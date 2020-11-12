@@ -9,7 +9,7 @@ int main(int argc, char *argv[]){
     int outer_cycle = 10;
     int jobs_n = atoi(argv[1]);
     srand(time(nullptr));
-    for (int t = 0; t < 1; t++){
+    for (int t = 0; t < 10; t++){
         unsigned int start = clock();
         SimulatedAnnealing <CauchyLaw> simulation(shed_proc_n, 
                                                 parallel, 

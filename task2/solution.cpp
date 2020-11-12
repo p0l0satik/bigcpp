@@ -51,7 +51,7 @@ void Solution::print_best_solution(string file){
     out.close();
 }
 
-Mutation::Mutation(shared_ptr<Solution> &sol, int mute):solution(sol), mute(mute){
+Mutation::Mutation(shared_ptr<SolutionAbstr> &sol, int mute):solution(sol), mute(mute){
     gen = mt19937(rd());
     uni_dis = uniform_real_distribution<>(0, 1.0);
     srand(time(nullptr));
