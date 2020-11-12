@@ -53,8 +53,8 @@ double SimulatedAnnealing<TempLaw>::start_main_cycle(string file, double best, s
             no_change = 0;
         } else {
             no_change++;
-
         }
+        // cout << no_change << endl;
         temp_law->cool_down();
         iter++;
     }
@@ -98,7 +98,7 @@ void SimulatedAnnealing<TempLaw>::simulated_annealing(){
             k++;
             pids.push_back(pid);
         }
-        srand(time(nullptr) + k);
+        // srand(time(nullptr) + k);
         auto res = start_main_cycle("timetable" + to_string(k) + ".txt", min_time, "best_timetable.txt");
         
         if (semop(id, &p0, 1) < 0){

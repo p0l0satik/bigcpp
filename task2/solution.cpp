@@ -54,7 +54,7 @@ void Solution::print_best_solution(string file){
 Mutation::Mutation(shared_ptr<SolutionAbstr> &sol, int mute):solution(sol), mute(mute){
     gen = mt19937(rd());
     uni_dis = uniform_real_distribution<>(0, 1.0);
-    srand(time(nullptr));
+    // srand(time(nullptr));
 };
 
 double Mutation::assess_solution(Timetable& timetable){
@@ -89,9 +89,10 @@ bool Mutation::mutate(double T){
         
         double delta = assess_solution(solution->timetable) - curr_assesm;
         
-        if (delta < 0){
+        if (delta <= 0){
             curr_assesm = assess_solution(solution->timetable);
             if (solution->best_sol_assesm < 0 || curr_assesm - solution->best_sol_assesm < 0){
+
                 solution->best_sol_assesm = curr_assesm;
                 solution->best_solution = solution->timetable;
                 improved = true;
