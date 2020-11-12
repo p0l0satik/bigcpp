@@ -5,12 +5,29 @@ int gen_int(int to, int from = 0){
     return from + rand() / ((RAND_MAX + 1u) / to);
 }
 
-Solution::Solution(vector<double>& jobs, int M){
-    best_sol_assesm = -1.0;
-    for (int t = 0; t < M; t ++)
-            timetable[t] = std::vector<double>();
-    for (auto job : jobs)
-        timetable[0].push_back(job);
+Solution::Solution(vector<double>& jobs, int M, double best, string best_f){
+    if (best == -1.0) {
+        best_sol_assesm = -1.0;
+        for (int t = 0; t < M; t ++)
+                timetable[t] = vector<double>();
+        for (auto job : jobs)
+            timetable[0].push_back(job);
+    } else {
+        ifstream in (best_f);
+            for (int t = 0; t < M; t++){
+
+                double job;
+                in >> job;
+                timetable[t] = std::vector<double>();
+                while(job >= 0){
+                    timetable[t].push_back(job);
+                    in >> job;
+                }
+            }
+        in.close();
+        best_solution = timetable;
+        best_sol_assesm = best;
+    }
 
 }
 
@@ -23,19 +40,21 @@ void Solution::print_solution(){
         cout << endl;
     }
 }
-void Solution::print_best_solution(){
+void Solution::print_best_solution(string file){
+    ofstream out (file, ios_base::app);
     for (auto proc : best_solution){
         for (auto job : proc.second){
-            cout << setw(6) << fixed << setprecision(2) << job << " ";
+            out << setw(6) << fixed << setprecision(2) << job << " ";
         }
-        cout << endl;
+        out << -1 << endl;
     }
+    out.close();
 }
 
-Mutation::Mutation(shared_ptr<Solution> &sol, int max_mute):solution(sol), mute(max_mute){
+Mutation::Mutation(shared_ptr<Solution> &sol, int mute):solution(sol), mute(mute){
     gen = mt19937(rd());
     uni_dis = uniform_real_distribution<>(0, 1.0);
-    // srand(time(nullptr));
+    srand(time(nullptr));
 };
 
 double Mutation::assess_solution(Timetable& timetable){
@@ -52,7 +71,7 @@ double Mutation::assess_solution(Timetable& timetable){
 
 bool Mutation::mutate(double T){
     bool improved = false;
-    for (int i = 0; i < 20; ++i){
+    for (int i = 0; i < mute; ++i){
         int proc_n = solution->timetable.size();
         double curr_assesm = assess_solution(solution->timetable);
         int proc1 = gen_int(proc_n);
@@ -78,7 +97,6 @@ bool Mutation::mutate(double T){
                 improved = true;
             }
         } else if (delta > 0 && uni_dis(gen) > exp((-1) * delta / T)){
-            // cout << "revert" << endl;
             if (proc1 != proc2) {
                 solution->timetable[proc1].insert(solution->timetable[proc1].begin() + task1, solution->timetable[proc2][task2]);
                 solution->timetable[proc2].erase(solution->timetable[proc2].begin() + task2);
