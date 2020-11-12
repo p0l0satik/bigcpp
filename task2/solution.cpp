@@ -10,7 +10,7 @@ Solution::Solution(vector<double>& jobs, int M, double best, string best_f){
         best_sol_assesm = -1.0;
         for (int t = 0; t < M; t ++){
             timetable[t] = vector<double>();
-            timetable[t].reserve(jobs.size());
+            // timetable[t].resize(jobs.size());
         }
         for (auto job : jobs)
             timetable[0].push_back(job);
@@ -21,7 +21,7 @@ Solution::Solution(vector<double>& jobs, int M, double best, string best_f){
                 double job;
                 in >> job;
                 timetable[t] = std::vector<double>();
-                timetable[t].reserve(jobs.size());
+                // timetable[t].resize(jobs.size());
                 while(job >= 0){
                     timetable[t].push_back(job);
                     in >> job;
