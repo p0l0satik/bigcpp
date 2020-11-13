@@ -39,7 +39,7 @@ class SimulatedAnnealing{
     int proc_n, parallel_n, inner_mute, out_cycle, in_cycle;
     double start_T;
     vector<double> jobs;
-    shared_ptr<SolutionAbstr> solution;
+    unique_ptr<SolutionAbstr> solution;
     unique_ptr<TemperatureLaw> temp_law;
     unique_ptr<MutationAbstr> mutation;
 public:

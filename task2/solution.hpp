@@ -25,17 +25,18 @@ protected:
     mt19937 gen; //Standard mersenne_twister_engine seeded with rd()
     uniform_real_distribution<> uni_dis;
 public:
-    virtual bool mutate(double T) = 0;
+    virtual bool mutate(unique_ptr<SolutionAbstr> &solution, double T) = 0;
     virtual double assess_solution(Timetable& timetable) = 0;
+    virtual ~MutationAbstr() = default;
 };
 
 class Mutation: public MutationAbstr{
-    shared_ptr<SolutionAbstr> solution;
     int mute;
 public:
-    bool mutate(double T);
+    bool mutate(unique_ptr<SolutionAbstr> &solution, double T);
     double assess_solution(Timetable& timetable);
-    Mutation(shared_ptr<SolutionAbstr> &sol, int mute);
+    Mutation(int mute);
+    ~Mutation() = default;
 };
 
 class SolutionAbstr{
@@ -46,7 +47,8 @@ public:
     virtual void print_solution() = 0;
     virtual void print_best_solution(string file) = 0;
     // virtual void read_best_solution(string file) = 0;
-    friend bool Mutation::mutate(double T);
+    friend bool Mutation::mutate(unique_ptr<SolutionAbstr> &solution, double T);
+    virtual ~SolutionAbstr();
 };
 
 class Solution: public SolutionAbstr{
@@ -55,4 +57,5 @@ public:
     void print_best_solution(string file);
     // void read_best_solution(string file);
     Solution(vector<double>& jobs, int M, double best, string best_f);
+    ~Solution() = default;
 };

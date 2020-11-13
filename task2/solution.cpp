@@ -54,7 +54,18 @@ void Solution::print_best_solution(string file){
     out.close();
 }
 
-Mutation::Mutation(shared_ptr<SolutionAbstr> &sol, int mute):solution(sol), mute(mute){
+SolutionAbstr::~SolutionAbstr(){
+    for (auto it : timetable){
+        it.second.clear();
+    }
+    for (auto it : best_solution){
+        it.second.clear();
+    }
+    timetable.clear();
+    best_solution.clear();
+}
+
+Mutation::Mutation(int mute):mute(mute){
     gen = mt19937(rd());
     uni_dis = uniform_real_distribution<>(0, 1.0);
     // srand(time(nullptr));
@@ -72,7 +83,7 @@ double Mutation::assess_solution(Timetable& timetable){
     return working_time;
 }
 
-bool Mutation::mutate(double T){
+bool Mutation::mutate(unique_ptr<SolutionAbstr> &solution, double T){
     bool improved = false;
     for (int i = 0; i < mute; ++i){
         int proc_n = solution->timetable.size();

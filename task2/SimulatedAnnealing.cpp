@@ -42,14 +42,14 @@ void SimulatedAnnealing<TempLaw>::read_jobs(string name){
 
 template<class TempLaw>
 double SimulatedAnnealing<TempLaw>::start_main_cycle(string file, double best, string best_f){
-    solution = make_shared<Solution>(jobs, proc_n, best, best_f);
+    solution = make_unique<Solution>(jobs, proc_n, best, best_f);
     temp_law = make_unique<TempLaw>(start_T);
-    mutation = make_unique<Mutation>(solution, inner_mute);
+    mutation = make_unique<Mutation>(inner_mute);
     int no_change = 0;
     int iter = 0;
     while (no_change < in_cycle){
         
-        if (mutation->mutate(temp_law->get_temp())){
+        if (mutation->mutate(solution, temp_law->get_temp())){
             no_change = 0;
         } else {
             no_change++;
