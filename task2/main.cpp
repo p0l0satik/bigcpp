@@ -1,9 +1,9 @@
 #include "SimulatedAnnealing.hpp"
 
 int main(int argc, char *argv[]){
-    int shed_proc_n = atoi(argv[2]); //usually 100
+    int shed_proc_n = atoi(argv[2]); //usually 100cd big    
     int parallel = atoi(argv[3]);
-    double T0 = 10;
+    double T0 = atoi(argv[4]);
     int mutation_per_T = 10;
     int inner_cycle = 100;
     int outer_cycle = 10;
@@ -13,7 +13,7 @@ int main(int argc, char *argv[]){
     srand(seed);
     for (int t = 0; t < 10; t++){
         unsigned int start = clock();
-        SimulatedAnnealing <CauchyLaw> simulation(shed_proc_n, 
+        SimulatedAnnealing <MixedLaw> simulation(shed_proc_n, 
                                                 parallel, 
                                                 T0,
                                                 mutation_per_T, 
@@ -24,7 +24,7 @@ int main(int argc, char *argv[]){
         simulation.simulated_annealing();
             
         unsigned int finish = clock();
-        cout << "Work time: "  << (double)(finish - start) / CLOCKS_PER_SEC << endl;
+        cout << ""  << (double)(finish - start) / CLOCKS_PER_SEC << endl;
     }
     return 0;
 }
