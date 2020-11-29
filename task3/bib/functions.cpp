@@ -4,7 +4,7 @@ class FunFactory::FunImpl{
     class AbstrFunCreator{
     public:
         virtual ~AbstrFunCreator(){}
-        virtual std::unique_ptr<TFunction> create() const = 0;
+        virtual std::unique_ptr<TFunction> create(std::vector<double> koefs) const = 0;
     };
     using FunCreatorPtr = std::shared_ptr<AbstrFunCreator>;
     using FunRegCreators = std::unordered_map<std::string, FunCreatorPtr>;
@@ -12,8 +12,8 @@ class FunFactory::FunImpl{
 public:
     template <class CurrentFun>
     class FunCreator : public AbstrFunCreator{
-        std::unique_ptr<TFunction> create() const override{
-            return std::make_unique<CurrentFun>();
+        std::unique_ptr<TFunction> create(std::vector<double> koefs) const override{
+            return std::make_unique<CurrentFun>(koefs);
         }
     };
 
@@ -25,20 +25,24 @@ public:
 
     void reg_all(){
         reg_creator<Constant>("constant");
+        reg_creator<Identical>("identical");
+        reg_creator<Sedate>("sedate");
+        reg_creator<Exp>("exp");
+        reg_creator<Polynomial>("polynomial");
     }
 
 
-    std::unique_ptr<TFunction> create_fun(const std::string& name) const{
+    std::unique_ptr<TFunction> create_fun(const std::string& name, std::vector<double> koefs) const{
         auto creator = registered_creators.find(name);
         if (creator == registered_creators.end()){
             return nullptr;
         }
-        return creator->second->create();
+        return creator->second->create(koefs);
     }
 };
 
 FunFactory::FunFactory() : Impl(std::make_unique<FunFactory::FunImpl>()){}
 FunFactory::~FunFactory(){}
-std::unique_ptr<TFunction> FunFactory::CreateFunction(const std::string& name) const{
-    return Impl->create_fun(name);
+std::unique_ptr<TFunction> FunFactory::CreateFunction(const std::string& name,  std::vector<double> koefs) const{
+    return Impl->create_fun(name, koefs);
 }
