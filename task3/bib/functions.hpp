@@ -5,19 +5,47 @@
 #include <iostream>
 #include <cmath>
 
+
 class TFunction{
 public:
     virtual double operator()(double x) = 0;
     virtual std::string ToString() = 0;
+    std::shared_ptr<TFunction> copy(){};
+};
+
+using TFunPtr = std::shared_ptr<TFunction>;
+
+
+class Addition : public TFunction{
+    TFunPtr Fr, Sc;
+public:
+    Addition(TFunPtr fr, TFunPtr sc): Fr(fr), Sc(sc){}
+    double operator()(double x){
+        return (*Fr)(x) + (*Sc)(x); 
+    }
+
+    std::string ToString(){
+        return Fr->ToString() + Sc->ToString();
+    }
+    TFunPtr copy(){
+        return std::make_shared<Addition>(Fr, Sc);
+    }
 };
 
 class Constant : public TFunction{
     double koef;
 public:
+
+    friend TFunPtr operator + (TFunction &left, TFunction &right);
     Constant(std::vector<double>& koefs): koef(koefs[0]){}
     double operator()(double x){return koef;}
     std::string ToString(){return std::to_string(koef);}
+    TFunPtr copy(){
+        std::vector<double> args = {koef};
+        return std::make_shared<Constant>(args);
+    }
 };
+
 
 class Identical : public TFunction{
     double a, b;
@@ -79,7 +107,7 @@ class FunFactory {
 public:
     FunFactory();
     ~FunFactory();
-    std::unique_ptr<TFunction> CreateFunction(const std::string& name, std::vector<double> koefs) const;
+    std::shared_ptr<TFunction> CreateFunction(const std::string& name, std::vector<double> koefs) const;
     std::vector<std::string> GetAvailableFunctions() const;
 
 };

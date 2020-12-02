@@ -4,6 +4,7 @@
 int main(int argc, char* argv[]){
     FunFactory fact;
     auto c2 = fact.CreateFunction("constant", std::vector<double> { 2.0});
+    auto c1 = fact.CreateFunction("constant", std::vector<double> { 1.0});
     auto i3= fact.CreateFunction("identical", std::vector<double> { 3.0, -1.0});
     auto i1= fact.CreateFunction("identical", std::vector<double> { 3.0, -.0});
     auto i0= fact.CreateFunction("identical", std::vector<double> { 3.0, 1.0});
@@ -23,4 +24,7 @@ int main(int argc, char* argv[]){
     std::cout << e3->ToString() <<std::endl;
     std::cout << p->ToString() <<std::endl;
 
+    Addition test(c1, c2);
+    auto c = *c1 + *c2;
+    std::cout <<  (*c)(0) <<std::endl;
 }
