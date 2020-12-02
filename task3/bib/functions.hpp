@@ -10,7 +10,7 @@ class TFunction{
 public:
     virtual double operator()(double x) = 0;
     virtual std::string ToString() = 0;
-    std::shared_ptr<TFunction> copy(){};
+    virtual std::shared_ptr<TFunction> copy(){return nullptr;};
 };
 
 using TFunPtr = std::shared_ptr<TFunction>;
@@ -32,11 +32,18 @@ public:
     }
 };
 
+TFunPtr operator + (TFunction &left, TFunction &right);
+
+template <typename T>
+TFunPtr operator + (TFunction &left, T right){std::cout << "Fu" <<std::endl; return nullptr;};
+
+template <typename T>
+TFunPtr operator + (T left, TFunction &right){std::cout << "Fa" <<std::endl; return nullptr;};
+
 class Constant : public TFunction{
     double koef;
 public:
 
-    friend TFunPtr operator + (TFunction &left, TFunction &right);
     Constant(std::vector<double>& koefs): koef(koefs[0]){}
     double operator()(double x){return koef;}
     std::string ToString(){return std::to_string(koef);}

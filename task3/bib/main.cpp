@@ -26,5 +26,6 @@ int main(int argc, char* argv[]){
 
     Addition test(c1, c2);
     auto c = *c1 + *c2;
+    auto f = "fdddd" + *c1;
     std::cout <<  (*c)(0) <<std::endl;
 }
