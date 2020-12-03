@@ -53,7 +53,15 @@ public:
     }
 
     std::string ToString(){
-        return Fr->ToString() + " " + Sc->ToString();
+        if (op == '+')
+            return Fr->ToString() + " + " + Sc->ToString();
+        else if (op == '-')
+            return Fr->ToString() + " - " + Sc->ToString();
+        else if (op == '*')
+            return "("+Fr->ToString() + ") * (" + Sc->ToString() + ")";
+        else if (op == '/')
+            return "("+Fr->ToString() + ") / (" + Sc->ToString() + ")";
+        
     }
     TFunPtr copy(){
         return std::make_shared<Addition>(Fr, Sc, op);

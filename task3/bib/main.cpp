@@ -10,7 +10,8 @@ int main(int argc, char* argv[]){
     auto i0= fact.CreateFunction("identical", { 3.0, 1.0});
     auto s3 = fact.CreateFunction("sedate", { 3.0});
     auto e3 = fact.CreateFunction("exp", {10});
-    auto p = fact.CreateFunction("polynomial", {1, -2, 3});
+    auto p = fact.CreateFunction("polynomial", {-1, 0, 1, 3});
+    auto p2 = fact.CreateFunction("polynomial", {7, 0, 3, 15});
     // std::cout << (*c2)(2.0) << std::endl;    
     // std::cout << (*i1)(0) << std::endl;    
     // std::cout << (*s3)(2.0) << std::endl; 
@@ -26,7 +27,8 @@ int main(int argc, char* argv[]){
 
     auto c = e3 / i3;
     // auto k = *c + *(*c1 + *c2);
-    std::cout <<  c->ToString() <<std::endl;
+    p2 = p2*p2;
+    std::cout <<  p->ToString() <<std::endl;
     std::cout <<  (*c)(2) <<std::endl;
-    equation(p, 0.1, 100);
+    equation(p, 0.1, 50);
 }
