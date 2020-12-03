@@ -47,6 +47,18 @@ std::shared_ptr<TFunction> FunFactory::CreateFunction(const std::string& name,  
     return Impl->create_fun(name, koefs);
 }
 
-TFunPtr operator+ (TFunction &left, TFunction &right){
-    return std::make_shared<Addition>(left.copy(), right.copy());
+TFunPtr operator+ (TFunPtr left, TFunPtr right){
+    return std::make_shared<Addition>(left->copy(), right->copy(), '+');
+}
+
+TFunPtr operator- (TFunPtr left, TFunPtr right){
+    return std::make_shared<Addition>(left->copy(), right->copy(), '-');
+}
+
+TFunPtr operator* (TFunPtr left, TFunPtr right){
+    return std::make_shared<Addition>(left->copy(), right->copy(), '*');
+}
+
+TFunPtr operator/ (TFunPtr left, TFunPtr right){
+    return std::make_shared<Addition>(left->copy(), right->copy(), '/');
 }
