@@ -1,9 +1,11 @@
+#pragma once
 #include <memory>
 #include <string>
 #include <vector>
 #include <unordered_map>
 #include <iostream>
 #include <cmath>
+
 
 
 class TFunction{
@@ -15,6 +17,7 @@ public:
 };
 
 using TFunPtr = std::shared_ptr<TFunction>;
+
 
 
 class Addition : public TFunction{
@@ -170,13 +173,17 @@ public:
         int p = 0;
         std::string str = "";
         for (auto k : koefs){
-            if (k == 0) continue;
+            if (k == 0) { 
+                p++; 
+                continue;
+            }
             if ( p == 0) {
-                str += k > 0 ? "" : "- ";
-                str += std::to_string(abs(k)) + " ";
+                str += k > 0 ? "" : "-";
+                str += std::to_string(abs(k));
             } else {
+                if (str.size()) str += " ";
                 str += k > 0 ? "+ " : "- ";
-                str += std::to_string(abs(k)) + "*x^" + std::to_string(p) + " ";
+                str += std::to_string(abs(k)) + "*x^" + std::to_string(p);
             }
             p++;
         }
@@ -188,7 +195,7 @@ public:
     double GetDeriv(double x){
         double p = 0, sum = 0;
         for (auto k : koefs){
-            if (p) sum += (k + p) * pow(x, p - 1);
+            if (p) sum += (k * p) * pow(x, p - 1);
             p++;
         }
         return sum;
@@ -205,3 +212,5 @@ public:
     std::vector<std::string> GetAvailableFunctions() const;
 
 };
+
+double equation(TFunPtr f, double step_size, double steps);

@@ -62,3 +62,15 @@ TFunPtr operator* (TFunPtr left, TFunPtr right){
 TFunPtr operator/ (TFunPtr left, TFunPtr right){
     return std::make_shared<Addition>(left->copy(), right->copy(), '/');
 }
+
+double equation(TFunPtr f, double step_size, double steps){
+    auto f_squared = f * f;
+    double prev_x = 0, cur_x = 0;
+    for (int t = 0; t < steps; t++){
+        cur_x = prev_x - step_size * f_squared->GetDeriv(prev_x);
+        prev_x = cur_x;
+        std::cout << cur_x << std::endl;
+    }
+    return cur_x;
+
+}
