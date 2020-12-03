@@ -14,11 +14,11 @@ include_directories(
 )
 
 add_executable(
-  TestSerialization ./main.cpp
+  Tests ./main.cpp
   ../bib/functions.cpp)
 
 target_link_libraries(
-  TestSerialization ${GTEST_LIBRARIES} Threads::Threads)
+  Tests ${GTEST_LIBRARIES} Threads::Threads)
 
 enable_testing()
-add_test(FT "./TestSerialization")
+add_test(FactoryTests "./Tests")

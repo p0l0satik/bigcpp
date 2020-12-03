@@ -3,7 +3,7 @@
 
 int main(int argc, char* argv[]){
     FunFactory fact;
-    auto c2 = fact.CreateFunction("constant", std::vector<double> { 0});
+    auto c2 = fact.CreateFunction("constant", { 0});
     auto c1 = fact.CreateFunction("constant", std::vector<double> { 1.0});
     auto i3= fact.CreateFunction("identical", std::vector<double> { 3.0, -1.0});
     auto i1= fact.CreateFunction("identical", std::vector<double> { 3.0, -0});

@@ -93,7 +93,7 @@ class Constant : public TFunction{
     double koef;
 public:
 
-    Constant(std::vector<double>& koefs): koef(koefs[0]){}
+    Constant(const std::vector<double>& koefs): koef(koefs[0]){}
     double operator()(double x){return koef;}
     std::string ToString(){return std::to_string(koef);}
     TFunPtr copy(){
@@ -109,7 +109,7 @@ public:
 class Identical : public TFunction{
     double a, b;
 public:
-    Identical(std::vector<double>& koefs): a(koefs[0]), b(koefs[1]){}
+    Identical(const std::vector<double>& koefs): a(koefs[0]), b(koefs[1]){}
     double operator()(double x){return a * x + b;}
     std::string ToString(){return std::to_string(a) + "*x" + (b != 0 ? (b > 0 ? "+" :"") +  std::to_string(b) : "");}
     TFunPtr copy(){
@@ -124,7 +124,7 @@ public:
 class Sedate : public TFunction{
     double koef;
 public:
-    Sedate(std::vector<double>& koefs): koef(koefs[0]){}
+    Sedate(const std::vector<double>& koefs): koef(koefs[0]){}
     double operator()(double x){return pow(x, koef);}
     std::string ToString(){return "x^" + std::to_string(koef);}
     TFunPtr copy(){
@@ -133,14 +133,16 @@ public:
     }
 
     double GetDeriv(double x){
-        return koef * pow(x, koef - 1);
+        if (koef != 1) return koef * pow(x, koef - 1);
+
+        return log(x);
     }
 };
 
 class Exp : public TFunction{
     double base;
 public:
-    Exp(std::vector<double>& koefs) : base(koefs[0]){}
+    Exp(const std::vector<double>& koefs) : base(koefs[0]){}
     double operator()(double x){return pow(base, x);}
     std::string ToString(){return std::to_string(base) + "^x";}
     TFunPtr copy(){
@@ -155,7 +157,7 @@ public:
 class Polynomial : public TFunction{
     std::vector<double> koefs;
 public:
-    Polynomial(std::vector<double>& koefs) : koefs(koefs){}
+    Polynomial(const std::vector<double>& koefs) : koefs(koefs){}
     double operator()(double x){
         double p = 0, sum = 0;
         for (auto k : koefs){
@@ -199,7 +201,7 @@ class FunFactory {
 public:
     FunFactory();
     ~FunFactory();
-    std::shared_ptr<TFunction> CreateFunction(const std::string& name, std::vector<double> koefs) const;
+    std::shared_ptr<TFunction> CreateFunction(const std::string& name, const std::vector<double> koefs) const;
     std::vector<std::string> GetAvailableFunctions() const;
 
 };
