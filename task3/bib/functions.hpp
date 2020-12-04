@@ -61,7 +61,8 @@ public:
             return "("+Fr->ToString() + ") * (" + Sc->ToString() + ")";
         else if (op == '/')
             return "("+Fr->ToString() + ") / (" + Sc->ToString() + ")";
-        
+        throw std::logic_error("impossible operation");
+        return 0;
     }
     TFunPtr copy(){
         return std::make_shared<Addition>(Fr, Sc, op);
