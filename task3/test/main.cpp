@@ -196,6 +196,16 @@ TEST_F(FactoryTests, arithmetics) {
     ASSERT_THROW(1 + e10, std::logic_error);
 }
 
+// GRADIENT DESCENDENCE
+TEST_F(FactoryTests, grad_descend) {
+    auto p = fact.CreateFunction("polynomial", {-7, 0, 3});
+    ASSERT_NEAR(sqrt(7.0/3), equation(p, 0.01, 100, 0.2), 0.01);
+    auto p1 = fact.CreateFunction("polynomial", {-10, 0, 4, -5, 7});
+    ASSERT_NEAR(1.1522, equation(p1, 0.0001, 1000, 0.1), 0.01);
+    auto c1 = fact.CreateFunction("constant", { 1.0});
+    auto e10 = fact.CreateFunction("exp", {2});
+    ASSERT_NEAR(0.0, equation(e10 - c1, 0.001, 10000, 5), 0.01);
+}
 
 int main(int argc, char *argv[])
 {

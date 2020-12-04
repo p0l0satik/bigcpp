@@ -30,5 +30,5 @@ int main(int argc, char* argv[]){
     p2 = p2*p2;
     std::cout <<  p->ToString() <<std::endl;
     std::cout <<  (*c)(2) <<std::endl;
-    equation(p, 0.1, 50);
+    equation(p, 0.001, 50);
 }

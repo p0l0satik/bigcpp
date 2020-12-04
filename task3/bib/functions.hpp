@@ -221,4 +221,4 @@ public:
 
 };
 
-double equation(TFunPtr f, double step_size, double steps);
+double equation(TFunPtr f, double step_size, double steps, double start);
