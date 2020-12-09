@@ -28,7 +28,12 @@ int main(int argc, char* argv[]){
     auto c = e3 / i3;
     // auto k = *c + *(*c1 + *c2);
     p2 = p2*p2;
-    std::cout <<  p->ToString() <<std::endl;
-    std::cout <<  (*c)(2) <<std::endl;
-    equation(p, 0.001, 50);
+    auto p3 = fact.CreateFunction("polynomial", {1, 0, -3, 0, 1});
+    auto f1 = fact.CreateFunction("polynomial", {1});
+    auto f2 = fact.CreateFunction("polynomial", {0, 0, 1});
+    auto f3 = fact.CreateFunction("polynomial", {-1, 0, 0, 1});
+    std::cout <<  f3->ToString()<<  " " << f2->ToString() << " " << f3->ToString() <<std::endl;
+    // std::cout <<  p3->GetDeriv(2) <<std::endl;
+    double x = equation(f3 + f1 + f2, 0.0001, 10000000, 1);
+    std::cout << x <<std::endl;
 }
