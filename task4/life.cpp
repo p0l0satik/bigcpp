@@ -5,8 +5,40 @@ void clear(){
     printf("\033[%d;%dH", 0, 0);
 }
 
+void generate_agar(uint width, uint height){
+    std::ofstream agar("../agar.txt");
+    for (int t = 0; t < height / 3; t++){
+        for (int i = 0; i < width; i++){
+            agar << '.';
+        }
+        agar << std::endl;
+        for (int i = 0; i < width; i++){
+            if (i % 3 == 0) 
+                agar << '.';
+            else 
+                agar << '#';
+        }
+        agar << std::endl;
+        for (int i = 0; i < width; i++){
+            if (i % 3 == 0) 
+                agar << '.';
+            else 
+                agar << '#';
+        }
+        agar << std::endl;
+    }
+    for (int t = 0; t < height % 3; t++){
+        for (int i = 0; i < width; i++){
+            agar << '.';
+        }
+        agar << std::endl;
+    }
+}
+
 GameOfLife::GameOfLife(uint cols, uint rows, std::vector<char>& gene):cols(cols), rows(rows){
     uint k = 0;
+    iter = 0;
+    last_change = 0;
     for (int i = 0; i < rows; ++i){
         field.emplace_back(std::vector<char>());
         for (int j = 0; j < cols; ++j){
@@ -17,6 +49,8 @@ GameOfLife::GameOfLife(uint cols, uint rows, std::vector<char>& gene):cols(cols)
 
 GameOfLife::GameOfLife(uint cols, uint rows):cols(cols), rows(rows){
     uint k = 0;
+    iter = 0;
+    last_change = 0;
     for (int i = 0; i < rows; ++i){
         field.emplace_back(std::vector<char>());
         for (int j = 0; j < cols; ++j){
@@ -27,6 +61,8 @@ GameOfLife::GameOfLife(uint cols, uint rows):cols(cols), rows(rows){
 
 GameOfLife::GameOfLife(uint cols, uint rows, std::string path):cols(cols), rows(rows){
     uint k = 0;
+    iter = 0;
+    last_change = 0;
     std::ifstream f (path);
     for (int i = 0; i < rows; ++i){
         field.emplace_back(std::vector<char>());
@@ -49,8 +85,20 @@ void GameOfLife::print_field(){
     }
 }
 
+void GameOfLife::print_field_to_file(std::string filename){
+    std::ofstream f (filename);
+    for (int i = 0; i < rows; ++i){
+        for (int j = 0; j < cols; ++j){
+            if (field[i][j] == 1) f << '#'; else f << '.';
+            // if (j < cols - 1) f << " ";
+        }
+        f << std::endl;
+    }
+}
+
 void GameOfLife::make_step(){
     std::vector<char*> die, born;
+    iter++;
     for (int i = 0; i < rows; ++i){
         for (int j = 0; j < cols; ++j){
             uint sum = 0;
@@ -68,6 +116,7 @@ void GameOfLife::make_step(){
             
         }
     }
+    if (die.size() || born.size()) last_change = iter;
     for (auto d : die){
         *d = 0;
     }
@@ -76,13 +125,35 @@ void GameOfLife::make_step(){
     }
 }
 
-void GameOfLife::animate(uint steps){
+void GameOfLife::animate(uint steps, int sleep_time, bool by_step){
     clear();
     print_field();
+    std::cout << "Iteration: " << iter << std::endl;
+    if (by_step){
+            char c;
+            std::cout << "Press any simbol + enter to continue" << std::endl;
+            std::cin >> c;
+        }
     for (int i = 0; i < steps; ++i){
-        sleep(1);
+        if (not by_step) usleep(sleep_time);
         make_step();
         clear();
         print_field();
+        std::cout << "Iteration: " << iter << std::endl;
+        if (by_step){
+            char c;
+            std::cout << "Press any simbol + enter to continue" << std::endl;
+            std::cin >> c;
+        }
     }
+}
+
+int GameOfLife::assess(){
+    uint sum = 0;
+    for (int i = 0; i < rows; ++i){
+        for (int j = 0; j < cols; ++j){
+            sum += field[i][j];
+        }
+    }
+    return sum;
 }
