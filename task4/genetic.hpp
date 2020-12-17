@@ -11,6 +11,7 @@
 #include <set>
 
 #define FIELD_SIZE 10
+#define DEBUG 0
 
 using namespace std::experimental;
 using gene_t = std::vector<char>;
@@ -41,7 +42,7 @@ class Selection : public AbstSelection{
     std::random_device rd;  //Will be used to obtain a seed for the random number engine
     std::mt19937 gen; //Standard mersenne_twister_engine seeded with rd()
 public:
-    Selection();
+    Selection(size_t seed);
     void select(std::shared_ptr<AbstPopulation> population);
     ~Selection() = default;
 };
@@ -57,7 +58,7 @@ class Crossbreeding : public AbstCrossbreeding{
     std::random_device rd;
     std::mt19937 gen;
 public:
-    Crossbreeding(double p);
+    Crossbreeding(double p, size_t seed);
     void crossbreed(std::shared_ptr<AbstPopulation> population);
 };
 
@@ -72,7 +73,7 @@ class Mutation : public AbstMutation{
     std::random_device rd;
     std::mt19937 gen;
 public:
-    Mutation(double p);
+    Mutation(double p, size_t seed);
     void mutate(std::shared_ptr<AbstPopulation> population);
 };
 
@@ -110,6 +111,6 @@ class Genetic{
     std::unique_ptr<AbstSelection> selection;
     std::shared_ptr<AbstPopulation> pop;
 public:
-    Genetic(std::string run, size_t pop_len, size_t gene_len, double p_breed, double p_mutate);
+    Genetic(std::string run, size_t pop_len, size_t gene_len, size_t seed,  double p_breed, double p_mutate);
     uint run();
 };
